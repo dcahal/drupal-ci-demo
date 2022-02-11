@@ -1,5 +1,5 @@
 # Drupal CI demo
-The goal here is to get a Drupal 7 server plus Ruby and React programs building in CircleCI.
+The goal here is to get a Drupal 8 server plus Ruby and React programs building in CircleCI.
 
 ## Steps
 1. Ruby program Docker image using Gem
