@@ -5,6 +5,6 @@ WORKDIR /hiworld
 ADD App.js ./src/
 RUN npm run build && \
     rm -rf src/ public/ node_modules/ README.md package* && \
-    npm install -g serve && \
-    serve -s build \
+    npm install -g serve
+ENTRYPOINT serve -s build
     
