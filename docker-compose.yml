@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  drupal:
+    image: drupal:8
+    container_name: dcid_drupal
+    ports:
+      - "8080:80"
+  mariadb:
+    image: mariadb:10
+    container_name: dcid_db
+    environment:
+      MYSQL_DATABASE: $DBNAME
+      MYSQL_USER: $DBUSER
+      MYSQL_PASSWORD: $DBPASS
+      MYSQL_ROOT_PASSWORD: $DBROOTPASS
+  ruby-hiworld:
+    image: dcid:ruby
+    build:
+      context: ruby-img
+      dockerfile: Dockerfile
+    container_name: dcid_ruby
+  react-splash:
+    image: dcid:react
+    build:
+      context: react-img
+      dockerfile: Dockerfile
+    container_name: dcid_react
+
