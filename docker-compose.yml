@@ -1,13 +1,13 @@
 version: "3.8"
 services:
   drupal:
-    image: drupal:8
+    image: drupal:8.9.14
     container_name: dcid_drupal
     ports:
       - "8080:80"
   mariadb:
     image: mariadb:10
-    container_name: dcid_db
+    container_name: dcid_mariadb
     environment:
       MYSQL_DATABASE: $DBNAME
       MYSQL_USER: $DBUSER
