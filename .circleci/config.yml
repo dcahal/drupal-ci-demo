@@ -13,3 +13,9 @@ jobs:
       - run:
           name: Execute docker-compose.yml
           command: docker compose up -d
+
+# Invoke jobs via workflows
+workflows:
+  drupal-stack-up-workflow:
+    jobs:
+      - drupal-stack-up
