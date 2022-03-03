@@ -22,6 +22,16 @@ jobs:
           command: |
            cd react-img
            docker build -f Dockerfile -t "PLACEHOLDER.ecr.us-east-2.amazonaws.com/react-img:${BUILD_ID}" .
+      - run:
+          name: push
+          command: |
+           apk update
+           apk add py3-pip
+           pip3 install awscli
+           aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin PLACEHOLDER.ecr.us-east-2.amazonaws.com
+           docker push "PLACEHOLDER.ecr.us-east-2.amazonaws.com/ruby-img:${BUILD_ID}" .
+           docker push "PLACEHOLDER.ecr.us-east-2.amazonaws.com/react-img:${BUILD_ID}" . 
+ 
   drupal-stack-up:
 # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     docker:
