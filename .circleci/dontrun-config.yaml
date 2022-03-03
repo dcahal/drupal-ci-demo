@@ -3,6 +3,24 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 jobs:
+  build-push:
+    docker:
+    - image: docker:dind
+    environment:
+      BUILD_ID: << pipeline.number >>
+    steps:
+      - setup_remote_docker:
+          version: 20.10.11
+      - checkout
+      - run:
+          name: Build ruby
+          command: |
+           cd ruby-img
+           docker build -f Dockerfile -t "PLACEHOLDER.ecr.us-east-2.amazonaws.com/ruby-img:${BUILD_ID}" .
+      - run:
+          name: Build react
+          command: |
+           cd react-img                                                                                             docker build -f Dockerfile -t "PLACEHOLDER.ecr.us-east-2.amazonaws.com/react-img:${BUILD_ID}" .
   drupal-stack-up:
 # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     docker:
