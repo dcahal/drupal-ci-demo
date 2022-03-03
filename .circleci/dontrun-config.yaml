@@ -3,7 +3,7 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 jobs:
-  build-push:
+  build-push-ecr:
     docker:
     - image: docker:dind
     environment:
@@ -51,6 +51,12 @@ jobs:
 
 # Invoke jobs via workflows
 workflows:
+  ecr-workflow:
+    jobs:
+      - build-push-ecr
+      - deploy:
+          requires:
+            - build-push-ecr
   drupal-stack-up-workflow:
     jobs:
       - drupal-stack-up
