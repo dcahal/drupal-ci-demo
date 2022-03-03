@@ -23,7 +23,7 @@ jobs:
            cd react-img
            docker build -f Dockerfile -t "PLACEHOLDER.ecr.us-east-2.amazonaws.com/react-img:${BUILD_ID}" .
       - run:
-          name: push
+          name: Push new images to ECR
           command: |
            apk update
            apk add py3-pip
