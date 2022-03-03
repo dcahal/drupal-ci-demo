@@ -32,23 +32,6 @@ jobs:
            docker push "PLACEHOLDER.ecr.us-east-2.amazonaws.com/ruby-img:${BUILD_ID}" .
            docker push "PLACEHOLDER.ecr.us-east-2.amazonaws.com/react-img:${BUILD_ID}" . 
  
-  drupal-stack-up:
-# Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Install Docker compose 
-          command: |
-            sudo mkdir -p /usr/local/lib/docker/cli-plugins
-            sudo curl -SL https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
-            sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose 
-      - run:
-          name: Execute docker-compose.yml
-          command: docker compose up -d
-
 # Invoke jobs via workflows
 workflows:
   ecr-workflow:
@@ -57,6 +40,3 @@ workflows:
       - deploy:
           requires:
             - build-push-ecr
-  drupal-stack-up-workflow:
-    jobs:
-      - drupal-stack-up
