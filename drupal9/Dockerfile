@@ -3,10 +3,10 @@ ARG DRUPAL_ROOT
 ARG THEME_DIR
 FROM docker.io/php:8.1-cli as composer
 
+COPY composer.json /app/
 COPY composer.sh /app/
 
 ENV PATH="$PATH:$HOME/.composer/vendor/bin"
-ENV NVM_DIR="$PLATFORM_APP_DIR/.nvm"
 
 RUN apt-get update && apt-get install --no-install-recommends --assume-yes \
     git \
@@ -42,13 +42,13 @@ FROM docker.io/node:16.13.2-buster as node
 ARG DRUPAL_ROOT
 ARG THEME_DIR
 COPY --from=composer /app/ /usr/src/
+COPY ./web /usr/src/web
+WORKDIR /usr/src/web/themes/custom/sba
 
-RUN apt-get update && apt-get install php-cli -no-install-recommends --assume-yes
-RUN curl -f -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh | bash
-RUN [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+RUN apt-get update && apt-get install php-cli --no-install-recommends --assume-yes
+#ENTRYPOINT ["bash","-c","sleep 600"]
 RUN npm install && \
     npm install -g gulp-cli
-WORKDIR /web/themes/custom/sba
 RUN gulp build-sass
 RUN rm -rf ./node_modules
 
@@ -82,8 +82,7 @@ RUN docker-php-ext-install -j "$(nproc)" \
     zip
 
 COPY --from=node /usr/src/ /var/www/html/
-COPY ./drush /usr/local/bin/drush
-RUN chmod a+x /usr/local/bin/drush
+RUN ln -s ./vendor/bin/drush /usr/bin/drush
 
 RUN chown --recursive www-data. /var/www/html/
 
@@ -98,9 +97,11 @@ RUN ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rew
 
 RUN rm -f /etc/apache2/sites-enabeled/000-default.conf
 
-COPY ./apache_entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod a+x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
 
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+  
+#ENTRYPOINT ["bash","-c","sleep 600"]
